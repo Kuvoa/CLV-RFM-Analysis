@@ -1,32 +1,123 @@
-# CLV-RFM-Analysis
-# 🎯 Customer LifeTine Value and Recency, Frequency, and Monetary Value
+# 📊 Customer Lifetime Value (CLV) Analysis
 
-## 🔍 Overview
-This project aims to provide a refined Customer Lifetime Value (CLV) analysis using cohort analysis, addressing limitations of the standard Shopify CLV formula. The analysis includes all website visitors, not just purchasing customers, and tracks their spending behavior over a 12-week period. By calculating average revenue per user (ARPU) for each cohort and projecting future revenue using cumulative growth percentages, this analysis offers a more accurate understanding of customer value over time. Key insights focus on identifying revenue growth trends, forecasting future CLV, and understanding long-term customer behavior.
+## 🔍 Project Overview
 
-## 🛠️ Tools Used
-- SQL Big Query 
-- Excel 
-- Powerpoint
+This project focuses on a refined Customer Lifetime Value (CLV) analysis using a cohort-based approach. Unlike previous CLV calculations using the Shopify formula, this analysis considers all website visitors (not just purchasers) and tracks their spending behavior over a 12-week period, providing more reliable insights into customer value.
 
-## 📊 Process
-1. Data collection or import
-2. Data cleaning & preprocessing
-3. Exploratory Data Analysis (EDA)
-4. Modeling / analysis
-5. Conclusion
+## 📂 Data Source
 
-## 🧠 Key Insights
-- Main findings or learnings
+* **Dataset:** `turing_data_analytics.raw_events`
+* **Cohort Period:** 12 weeks
+* **Reference Date:** 2021-01-24 (last weekly cohort in the dataset)
 
-## 📁 File Guide
-- `notebook.ipynb` – main analysis
-- `dashboard.pbix` or `.xlsx` – dashboard if used
-- `slides.pdf` – summary presentation
-- `images/` – charts or visuals
+## 🚀 Key Analysis Steps
 
-## 🚀 Next Steps (optional)
-- What would you do next with more time or data?
+1. **Registration Cohort Creation:**
 
-## 🖼️ Example Visual (optional)
-![Sample Chart](images/sample-chart.png)
+   * Extracted each user's first event week (registration week) using `user_pseudo_id`.
+
+2. **Revenue Data Extraction:**
+
+   * Collected weekly user purchases, ensuring date format consistency.
+
+3. **Cohort CLV Calculation:**
+
+   * Calculated Average Revenue per User (ARPU) for each cohort week.
+
+4. **Cumulative CLV Calculation:**
+
+   * Calculated cumulative revenue per user over 12 weeks for each cohort.
+
+5. **Future CLV Projection:**
+
+   * Used cumulative growth % to predict future revenue for 12 weeks.
+
+## 📊 Key Metrics
+
+* **Average Revenue Per User (ARPU)** for each cohort.
+* **Cumulative Revenue per User** over time.
+* **Projected Future Revenue** using cumulative growth.
+
+## 📊 Visualizations
+
+* Cohort Table with Average Revenue per User.
+* Cumulative CLV Table with running totals.
+* Projected CLV Table showing predicted values for each cohort.
+
+## 💡 Insights
+
+* Identified trends in revenue growth across user cohorts.
+* Analyzed how initial customer engagement influences long-term value.
+* Provided a forecast of future user revenue using cumulative growth rates.
+
+## 📌 SQL Query Used
+
+```sql
+WITH
+  FirstVisit AS (
+    SELECT
+      DISTINCT user_pseudo_id AS User, 
+      MIN(PARSE_DATE('%Y%m%d', event_date)) AS RegDate, 
+      MIN(event_timestamp) AS FirstVisit 
+    FROM
+      `tc-da-1.turing_data_analytics.raw_events`
+    GROUP BY
+      1  
+  ),
+
+  Purchases AS (
+    SELECT
+      user_pseudo_id AS User,  
+      PARSE_DATE('%Y%m%d', event_date) AS PurchaseDate,  
+      purchase_revenue_in_usd AS Revenue  
+    FROM
+      `tc-da-1.turing_data_analytics.raw_events`
+    WHERE
+      event_name = 'purchase'  
+      AND purchase_revenue_in_usd > 0  
+  ),
+  CohortData AS (
+    SELECT
+      f.User AS FUser,  
+      DATE_TRUNC(RegDate, week) AS RegWeek,  
+      p.User AS PUser,  
+      DATE_TRUNC(PurchaseDate, week) AS PurchaseWeek,  
+      p.Revenue  
+    FROM
+      FirstVisit f  
+    LEFT JOIN
+      Purchases p  
+    ON
+      f.User = p.User 
+  )
+SELECT
+  RegWeek,  
+  COUNT(FUser) AS Registrations,  
+  SUM(CASE WHEN PurchaseWeek = RegWeek THEN Revenue ELSE 0 END) AS Week0,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 1 WEEK) THEN Revenue ELSE 0 END) AS Week1,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 2 WEEK) THEN Revenue ELSE 0 END) AS Week2,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 3 WEEK) THEN Revenue ELSE 0 END) AS Week3,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 4 WEEK) THEN Revenue ELSE 0 END) AS Week4,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 5 WEEK) THEN Revenue ELSE 0 END) AS Week5,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 6 WEEK) THEN Revenue ELSE 0 END) AS Week6,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 7 WEEK) THEN Revenue ELSE 0 END) AS Week7,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 8 WEEK) THEN Revenue ELSE 0 END) AS Week8,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 9 WEEK) THEN Revenue ELSE 0 END) AS Week9,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 10 WEEK) THEN Revenue ELSE 0 END) AS Week10,  
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 11 WEEK) THEN Revenue ELSE 0 END) AS Week11,
+  SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 12 WEEK) THEN Revenue ELSE 0 END) AS Week12  
+FROM
+  CohortData  
+  Where RegWeek < '2021-01-31'  
+GROUP BY
+  RegWeek 
+ORDER BY
+  RegWeek;
+```
+
+## 🚀 Future Improvements
+
+* Explore advanced segmentation techniques for better CLV prediction.
+* Compare CLV across different marketing channels.
+* Integrate customer acquisition cost for more accurate profitability analysis.
+
