@@ -1,65 +1,58 @@
-📊 Customer Lifetime Value (CLV) Analysis
+# 📊 Customer Lifetime Value (CLV) Analysis
 
-🔍 Project Overview
+## 🔍 Project Overview
 
 This project focuses on a refined Customer Lifetime Value (CLV) analysis using a cohort-based approach. Unlike previous CLV calculations using the Shopify formula, this analysis considers all website visitors (not just purchasers) and tracks their spending behavior over a 12-week period, providing more reliable insights into customer value.
 
-📂 Data Source
+## 📂 Data Source
 
-Dataset: turing_data_analytics.raw_events
+* **Dataset:** `turing_data_analytics.raw_events`
+* **Cohort Period:** 12 weeks
+* **Reference Date:** 2021-01-24 (last weekly cohort in the dataset)
 
-Cohort Period: 12 weeks
+## 🚀 Key Analysis Steps
 
-Reference Date: 2021-01-24 (last weekly cohort in the dataset)
+1. **Registration Cohort Creation:**
 
-🚀 Key Analysis Steps
+   * Extracted each user's first event week (registration week) using `user_pseudo_id`.
 
-Registration Cohort Creation:
+2. **Revenue Data Extraction:**
 
-Extracted each user's first event week (registration week) using user_pseudo_id.
+   * Collected weekly user purchases, ensuring date format consistency.
 
-Revenue Data Extraction:
+3. **Cohort CLV Calculation:**
 
-Collected weekly user purchases, ensuring date format consistency.
+   * Calculated Average Revenue per User (ARPU) for each cohort week.
 
-Cohort CLV Calculation:
+4. **Cumulative CLV Calculation:**
 
-Calculated Average Revenue per User (ARPU) for each cohort week.
+   * Calculated cumulative revenue per user over 12 weeks for each cohort.
 
-Cumulative CLV Calculation:
+5. **Future CLV Projection:**
 
-Calculated cumulative revenue per user over 12 weeks for each cohort.
+   * Used cumulative growth % to predict future revenue for 12 weeks.
 
-Future CLV Projection:
+## 🛠️ Tools Used
 
-Used cumulative growth % to predict future revenue for 12 weeks.
+* **BigQuery SQL:** For data extraction, transformation, and cohort creation.
+* **Excel:** For calculating and visualizing cohort revenue and ARPU.
+* **PowerPoint:** For creating a clean and visually engaging presentation of findings.
 
-🛠️ Tools Used
+## 📊 Key Metrics
 
-BigQuery SQL: For data extraction, transformation, and cohort creation.
+* **Average Revenue Per User (ARPU)** for each cohort.
+* **Cumulative Revenue per User** over time.
+* **Projected Future Revenue** using cumulative growth.
 
-Excel: For calculating and visualizing cohort revenue and ARPU.
+## 📊 Visualizations
 
-PowerPoint: For creating a clean and visually engaging presentation of findings.
+* Cohort Table with Average Revenue per User.
+* Cumulative CLV Table with running totals.
+* Projected CLV Table showing predicted values for each cohort.
 
-📊 Key Metrics
+## 📌 SQL Query Used
 
-Average Revenue Per User (ARPU) for each cohort.
-
-Cumulative Revenue per User over time.
-
-Projected Future Revenue using cumulative growth.
-
-📊 Visualizations
-
-Cohort Table with Average Revenue per User.
-
-Cumulative CLV Table with running totals.
-
-Projected CLV Table showing predicted values for each cohort.
-
-📌 SQL Query Used
-
+```sql
 -- SQL Query for CLV Analysis
 WITH
   FirstVisit AS (
@@ -81,45 +74,37 @@ WITH
 SELECT RegWeek, COUNT(FUser) AS Registrations, SUM(CASE WHEN PurchaseWeek = RegWeek THEN Revenue ELSE 0 END) AS Week0,
   SUM(CASE WHEN PurchaseWeek = DATE_ADD(RegWeek, INTERVAL 1 WEEK) THEN Revenue ELSE 0 END) AS Week1, ... (Week2 to Week12)
 FROM CohortData WHERE RegWeek < '2021-01-31' GROUP BY RegWeek ORDER BY RegWeek;
+```
 
-📂 Excel File: CVL Analysis.xlsx
+## 📂 Excel File: CVL Analysis.xlsx
 
-Content: This file tracks revenue per cohort across 12 weeks, including:
+* **Content:** This file tracks revenue per cohort across 12 weeks, including:
 
-RegWeek: Registration week of each cohort.
+  * `RegWeek`: Registration week of each cohort.
+  * `Registrations`: Number of users in each cohort.
+  * `Week0 - Week12`: Total revenue per cohort in each week.
+  * `Week0.1 - Week12.1`: Average Revenue Per User (ARPU) per cohort.
 
-Registrations: Number of users in each cohort.
+## 📂 PDF File: CVL Analysis.pdf
 
-Week0 - Week12: Total revenue per cohort in each week.
+* **Content:** Visual presentation of CLV analysis, highlighting:
 
-Week0.1 - Week12.1: Average Revenue Per User (ARPU) per cohort.
+  * Revenue decline trends, especially after Week 0.
+  * Cohort performance differences (strong early cohorts, weak recent ones).
+  * Cumulative growth slowing down beyond Week 7.
+  * Actionable recommendations for improving user engagement and retention.
 
-📂 PDF File: CVL Analysis.pdf
+## 💡 Insights
 
-Content: Visual presentation of CLV analysis, highlighting:
+* Identified trends in revenue growth across user cohorts.
+* Analyzed how initial customer engagement influences long-term value.
+* Provided a forecast of future user revenue using cumulative growth rates.
 
-Revenue decline trends, especially after Week 0.
+## 🚀 Future Improvements
 
-Cohort performance differences (strong early cohorts, weak recent ones).
+* Explore advanced segmentation techniques for better CLV prediction.
+* Compare CLV across different marketing channels.
+* Integrate customer acquisition cost for more accurate profitability analysis.
 
-Cumulative growth slowing down beyond Week 7.
-
-Actionable recommendations for improving user engagement and retention.
-
-💡 Insights
-
-Identified trends in revenue growth across user cohorts.
-
-Analyzed how initial customer engagement influences long-term value.
-
-Provided a forecast of future user revenue using cumulative growth rates.
-
-🚀 Future Improvements
-
-Explore advanced segmentation techniques for better CLV prediction.
-
-Compare CLV across different marketing channels.
-
-Integrate customer acquisition cost for more accurate profitability analysis.
 
 
