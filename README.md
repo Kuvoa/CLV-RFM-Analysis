@@ -149,5 +149,4 @@ This presentation highlights:
 - Incorporate Customer Acquisition Cost (CAC) to assess net profitability  
 - Experiment with machine learning models to predict future customer value more accurately
 
----
 
