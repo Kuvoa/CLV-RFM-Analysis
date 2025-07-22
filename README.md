@@ -1,56 +1,42 @@
-# 📊 Customer Lifetime Value (CLV) Analysis
+## Customer Lifetime Value (CLV) Analysis
 
-## 🔍 Project Overview
+# Project Overview
 
-This project focuses on a refined Customer Lifetime Value (CLV) analysis using a cohort-based approach. Unlike previous CLV calculations using the Shopify formula, this analysis considers all website visitors (not just purchasers) and tracks their spending behavior over a 12-week period, providing more reliable insights into customer value.
+This project presents a refined Customer Lifetime Value (CLV) analysis using a cohort-based approach. Unlike previous CLV methods based on the Shopify formula, which only considers purchasers, this analysis includes all website visitors and tracks their purchasing behavior over a 12-week period. This provides a more complete and realistic view of customer value and long-term engagement.
 
-## 📂 Data Source
+# Data Source
+	•	Dataset: turing_data_analytics.raw_events
+	•	Cohort Period: 12 weeks
+	•	Reference Date: 2021-01-24 (last weekly cohort in the dataset)
 
-* **Dataset:** `turing_data_analytics.raw_events`
-* **Cohort Period:** 12 weeks
-* **Reference Date:** 2021-01-24 (last weekly cohort in the dataset)
+# Key Analysis Steps
+	1.	Registration Cohort Creation
+Extracted each user’s first event week (registration week) using user_pseudo_id.
+	2.	Revenue Data Extraction
+Filtered for purchase events and ensured all event dates were properly formatted.
+	3.	Cohort CLV Calculation
+Calculated Average Revenue Per User (ARPU) for each cohort on a weekly basis.
+	4.	Cumulative CLV Calculation
+Tracked cumulative revenue per user over 12 weeks to assess long-term value.
+	5.	Future CLV Projection
+Applied cumulative growth rates to forecast revenue behavior for each cohort beyond the current window.
 
-## 🚀 Key Analysis Steps
+# Tools Used
+	•	BigQuery SQL for querying and transforming raw event data
+	•	Excel for ARPU calculations, cumulative CLV, and forecasting
+	•	PowerPoint for creating a professional presentation of key findings
 
-1. **Registration Cohort Creation:**
+# Key Metrics
+	•	Average Revenue Per User (ARPU) by cohort and week
+	•	Cumulative Revenue Per User over a 12-week horizon
+	•	Projected future revenue based on historical cohort growth trends
 
-   * Extracted each user's first event week (registration week) using `user_pseudo_id`.
+# Visualizations
+	•	Weekly ARPU by cohort
+	•	Cumulative CLV tables with running totals
+	•	Forecasted revenue projections based on observed growth rates
 
-2. **Revenue Data Extraction:**
-
-   * Collected weekly user purchases, ensuring date format consistency.
-
-3. **Cohort CLV Calculation:**
-
-   * Calculated Average Revenue per User (ARPU) for each cohort week.
-
-4. **Cumulative CLV Calculation:**
-
-   * Calculated cumulative revenue per user over 12 weeks for each cohort.
-
-5. **Future CLV Projection:**
-
-   * Used cumulative growth % to predict future revenue for 12 weeks.
-
-## 🛠️ Tools Used
-
-* **BigQuery SQL:** For data extraction, transformation, and cohort creation.
-* **Excel:** For calculating and visualizing cohort revenue and ARPU.
-* **PowerPoint:** For creating a clean and visually engaging presentation of findings.
-
-## 📊 Key Metrics
-
-* **Average Revenue Per User (ARPU)** for each cohort.
-* **Cumulative Revenue per User** over time.
-* **Projected Future Revenue** using cumulative growth.
-
-## 📊 Visualizations
-
-* Cohort Table with Average Revenue per User.
-* Cumulative CLV Table with running totals.
-* Projected CLV Table showing predicted values for each cohort.
-
-## 📌 SQL Query Used
+# SQL Query Used
 
 ```sql
 -- SQL Query for CLV Analysis
@@ -115,36 +101,29 @@ GROUP BY
 ORDER BY
   RegWeek; 
 ```
+## Excel File: CLV_Analysis.xlsx
 
-## 📂 Excel File: CVL Analysis.xlsx
+This Excel workbook includes:
+	•	Registration week cohorts and user counts
+	•	Weekly revenue values from Week 0 to Week 12
+	•	Weekly ARPU per cohort
+	•	Cumulative revenue and projected revenue per user
 
-* **Content:** This file tracks revenue per cohort across 12 weeks, including:
+PDF File: CLV_Analysis.pdf
 
-  * `RegWeek`: Registration week of each cohort.
-  * `Registrations`: Number of users in each cohort.
-  * `Week0 - Week12`: Total revenue per cohort in each week.
-  * `Week0.1 - Week12.1`: Average Revenue Per User (ARPU) per cohort.
+## This presentation highlights:
+	•	Revenue trends and drop-offs after initial registration
+	•	Cohort-level differences in retention and revenue growth
+	•	A slowdown in cumulative growth after Week 7
+	•	Strategic recommendations for improving engagement and CLV outcomes
 
-## 📂 PDF File: CVL Analysis.pdf
+## Insights
+	•	Most revenue is generated in the first week after registration, with sharp declines in later weeks.
+	•	Early user engagement is a key driver of long-term value.
+	•	Newer cohorts underperformed older ones, indicating a potential shift in acquisition quality or onboarding.
+	•	Forecasting revealed diminishing returns beyond Week 7, emphasizing the importance of early re-engagement.
 
-* **Content:** Visual presentation of CLV analysis, highlighting:
-
-  * Revenue decline trends, especially after Week 0.
-  * Cohort performance differences (strong early cohorts, weak recent ones).
-  * Cumulative growth slowing down beyond Week 7.
-  * Actionable recommendations for improving user engagement and retention.
-
-## 💡 Insights
-
-* Identified trends in revenue growth across user cohorts.
-* Analyzed how initial customer engagement influences long-term value.
-* Provided a forecast of future user revenue using cumulative growth rates.
-
-## 🚀 Future Improvements
-
-* Explore advanced segmentation techniques for better CLV prediction.
-* Compare CLV across different marketing channels.
-* Integrate customer acquisition cost for more accurate profitability analysis.
-
-
-
+## Future Improvements
+	•	Apply segmentation based on acquisition source, geography, or device type
+	•	Incorporate Customer Acquisition Cost (CAC) to assess net profitability
+	•	Experiment with machine learning models to predict future customer value more accurately
