@@ -111,8 +111,9 @@ WHERE
 GROUP BY
   RegWeek 
 ORDER BY
-  RegWeek;
+  RegWeek;,
 
+---
 
 ### Excel File: `CLV_Analysis.xlsx`
 
@@ -124,6 +125,7 @@ This Excel workbook includes:
 - Cumulative revenue and projected revenue per user  
 
 ### PDF File: `CLV_Analysis.pdf`
+---
 
 This presentation highlights:
 
@@ -131,6 +133,7 @@ This presentation highlights:
 - Cohort-level differences in retention and revenue growth  
 - A slowdown in cumulative growth after Week 7  
 - Strategic recommendations for improving engagement and CLV outcomes  
+---
 
 ### Insights
 
@@ -138,9 +141,14 @@ This presentation highlights:
 - Early user engagement is a key driver of long-term value  
 - Newer cohorts underperformed older ones, indicating a potential shift in acquisition quality or onboarding  
 - Forecasting revealed diminishing returns beyond Week 7, emphasizing the importance of early re-engagement  
+---
 
 ### Future Improvements
 
 - Apply segmentation based on acquisition source, geography, or device type  
 - Incorporate Customer Acquisition Cost (CAC) to assess net profitability  
-- Experiment with machine learning models to predict future customer value more accurately  
+- Experiment with machine learning models to predict future customer value more accurately
+
+---
+
+---
